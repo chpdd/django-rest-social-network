@@ -1,13 +1,23 @@
 from rest_framework import serializers
 
-class PublicationSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.HyperlinkedRelatedField()
-    text = serializers.CharField()
-    pub_date_time = serializers.DateTimeField()
-    likers = serializers.HyperlinkedRelatedField()
+from .models import Post, Comment
+
+
+class PostSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField("publications:post-detail")
+
+    class Meta:
+        model = Post
+        fields = "__all__"
+        # extra_kwargs = {"likers": {"read_only": True}}
+
+
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.HyperlinkedRelatedField()
-    text = serializers.CharField()
-    pub_date_time = serializers.DateTimeField()
-    likers = serializers.HyperlinkedRelatedField()
+    url = serializers.HyperlinkedIdentityField("publications:comment-detail")
+    # owner = serializers.HyperlinkedRelatedField
+    class Meta:
+        model = Comment
+        fields = "__all__"
+        # extra_kwargs = {"likers": {"read_only": True}}
+

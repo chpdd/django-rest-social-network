@@ -5,8 +5,8 @@ from .views import ProfileViewSet
 
 app_name = "accounts"
 
-router = routers.SimpleRouter()
-router.register(r'profiles', ProfileViewSet)
+router = routers.DefaultRouter()
+router.register(r'profile', ProfileViewSet)
 
 urlpatterns = [
     path("", include(router.urls))
