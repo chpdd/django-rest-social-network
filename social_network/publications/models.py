@@ -8,10 +8,10 @@ class Post(models.Model):
     text = models.TextField()
     pub_date_time = models.DateTimeField(auto_now=True)
     likers = models.ManyToManyField("accounts.Profile", related_name="liked_publication")
-    comments = models.ForeignKey("publications.Comment", on_delete=models.CASCADE)
 
 
 class Comment(models.Model):
+    post = models.ForeignKey("publications.Post", on_delete=models.CASCADE)
     owner = models.ForeignKey("accounts.Profile", models.CASCADE, related_name="posted_comment")
     text = models.TextField()
     pub_date_time = models.DateTimeField(auto_now=True)
