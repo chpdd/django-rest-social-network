@@ -5,18 +5,18 @@ from rest_framework.views import Response
 
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly, NoListIsOwnerOrReadOnly
 
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [IsOwnerOrReadOnly, permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user.profile)
 
-    @action(detail=True, methods=["post"], permission_classes=[permissions.IsAuthenticated])
+    @action(detail=True, methods=["post"])
     def add_comment(self, request, pk):
         post = self.get_object()
         serializer = CommentSerializer(data=request.data, context={"request": request})
@@ -29,7 +29,7 @@ class PostViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                      mixins.DestroyModelMixin):
     serializer_class = CommentSerializer
-    permission_classes = [IsOwnerOrReadOnly, permissions.IsAuthenticated]
+    permission_classes = [NoListIsOwnerOrReadOnly]
 
     def get_queryset(self):
         if self.action == "list":

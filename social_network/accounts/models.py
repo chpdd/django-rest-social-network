@@ -11,6 +11,14 @@ class Profile(models.Model):
     bio = models.TextField(blank=True, max_length=512)
 
 
+class Subscription(models.Model):
+    subscriber = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="subscriptions")
+    subscribed_to = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="subscriptions_to_me")
+
+    class Meta:
+        unique_together = ["subscriber", "subscribed_to"]
+
+
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
