@@ -4,6 +4,8 @@ from rest_framework.viewsets import mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from publications.models import Post
+from publications.serializers import PostSerializer
 from .models import Profile, Subscription
 from .serializers import ProfileSerializer
 from .permissions import ActualUserOrReadOnly, NotActualUser
@@ -38,3 +40,11 @@ class ProfileViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.
             subscription.delete()
             return Response(data={"detail": "You have successfully unsubscribe"}, status=status.HTTP_204_NO_CONTENT)
         return Response(data={"detail": "You weren't subscribed"}, status=status.HTTP_200_OK)
+
+    @action(methods=["get"], detail=True)
+    def posts(self, request, pk):
+        owner = self.get_object()
+        posts = Post.objects.filter(owner=owner)
+        serializer = PostSerializer(posts, many=True, context={"request": request})
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+

@@ -18,24 +18,28 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Comment
-        fields = "__all__"
+        fields = ["url", "pk", "owner", "text", "pub_date_time", "likers"]
         extra_kwargs = {
             "post": {"read_only": True},
             "likers": {"read_only": True},
             # "owner": {"read_only": True},
         }
 
-
-
-
 class PostSerializer(serializers.HyperlinkedModelSerializer):
     owner = OwnerSerializer(read_only=True)
-    comments = CommentSerializer(many=True, read_only=True, source="post_comments")
 
     class Meta:
         model = Post
-        fields = "__all__"
+        fields = ["url", "pk", "owner", "text", "pub_date_time", "likers"]
         extra_kwargs = {
             "likers": {"read_only": True},
             # "owner": {"read_only": True},
         }
+
+
+# class PostWithCommentsSerializer(PostSerializer):
+#     comments = CommentSerializer(many=True, read_only=True)
+#     class Meta(PostSerializer.Meta):
+#         fields = PostSerializer.Meta.fields + ["comments"]
+
+

@@ -11,4 +11,4 @@ class NoListIsOwnerOrReadOnly(permissions.BasePermission):
         return request.method in permissions.SAFE_METHODS or obj.owner == request.user.profile
 
     def has_permission(self, request, view):
-        return view.action == "list" and request.user.is_authenticated
+        return view.action != "list" or request.user.is_authenticated
