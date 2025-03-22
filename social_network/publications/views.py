@@ -9,7 +9,8 @@ from .serializers import PostSerializer, CommentSerializer
 from .permissions import IsOwnerOrReadOnly, NoListIsOwnerOrReadOnly
 
 
-class PostViewSet(viewsets.ModelViewSet):
+class PostViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                  mixins.CreateModelMixin, mixins.DestroyModelMixin):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsOwnerOrReadOnly]
